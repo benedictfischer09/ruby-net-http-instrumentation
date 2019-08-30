@@ -4,13 +4,13 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "net/http/instrumentation/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "nethttp-instrumentation"
+  spec.name          = "nethttp-instrumentation-dox-fork"
   spec.version       = Net::Http::Instrumentation::VERSION
-  spec.authors       = ["Ashwin Chandrasekar"]
-  spec.email         = ["achandrasekar@signalfx.com"]
+  spec.authors       = ["Ashwin Chandrasekar", "Ben Fischer"]
+  spec.email         = ["ops@doximity.com"]
 
   spec.summary       = %q{OpenTracing Instrumentation for Net::HTTP requests.}
-  spec.homepage      = "http://github.com/signalfx/ruby-net-http-instrumentation"
+  spec.homepage      = "http://github.com/doximity/ruby-net-http-instrumentation"
   spec.license       = "Apache-2.0"
 
   # Specify which files should be added to the gem when it is released.
