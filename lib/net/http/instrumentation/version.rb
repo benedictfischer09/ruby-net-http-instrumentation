@@ -1,7 +1,7 @@
 module Net
   module Http
     module Instrumentation
-      VERSION = "0.3.0.doximity1"
+      VERSION = "0.2.0.doximity1"
     end
   end
 end
