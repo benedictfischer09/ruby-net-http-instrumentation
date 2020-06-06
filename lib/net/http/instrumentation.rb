@@ -53,16 +53,29 @@ module Net
                   "peer.host" => @address,
                   "peer.port" => @port,
                 }
+
                 ::Net::Http::Instrumentation.tracer.start_active_span("net_http.request", tags: tags) do |scope|
                   # inject the trace so it's available to the remote service
                   OpenTracing.inject(scope.span.context, OpenTracing::FORMAT_RACK, req)
 
-                  # call the original request method
-                  res = request_original(req, body, &block)
+                  begin
+                    # call the original request method
+                    res = request_original(req, body, &block)
 
-                  # set response code and error if applicable
-                  scope.span.set_tag("http.status_code", res.code)
-                  scope.span.set_tag("error", true) if ::Net::Http::Instrumentation.status_codes.any? { |e| res.is_a? e }
+                    # set response code and error if applicable
+                    scope.span.set_tag("http.status_code", res.code)
+                    scope.span.set_tag("error", true) if ::Net::Http::Instrumentation.status_codes.any? { |e| res.is_a? e } || (res.code.to_i >= 500 && res.code.to_i < 600)
+                  rescue StandardError => err
+                    scope.span.set_tag("error", true)
+                    scope.span.log_kv(
+                      event: "error",
+                      'error.kind': err.class.to_s,
+                      'error.object': err,
+                      message: err.respond_to?(:message) ? err.message : err.to_s,
+                      stack: err.respond_to?(:backtrace) ? err.backtrace.join("\n") : err.to_s
+                    )
+                    raise
+                  end
                 end
               end
 
