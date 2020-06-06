@@ -82,6 +82,24 @@ RSpec.describe Net::Http::Instrumentation do
 
         expect(OpenTracing.global_tracer.spans.first.tags).not_to have_key('error')
       end
+
+      it "provides a operation name based on request info" do
+        stub_request(:any, "www.example.com/api/v1/article/97863119-0fb4-4303-a0ca-0337406e8645").
+          to_return(body: "abc", status: 400,
+                    headers: { 'Content-Length' => 3 })
+        uri = URI("http://www.example.com/api/v1/article/97863119-0fb4-4303-a0ca-0337406e8645")
+
+        allow(OpenTracing.global_tracer).to receive(:start_active_span).with("HTTP PUT /api/v1/article/<uuid>", anything)
+
+        Net::HTTP.start(uri.host, uri.port) do |http|
+          request = Net::HTTP::Put.new uri
+
+          response = http.request request
+        end
+
+
+        expect(OpenTracing.global_tracer).to have_received(:start_active_span).with("HTTP PUT /api/v1/article/<uuid>", anything)
+      end
     end
 
     describe "with config" do
