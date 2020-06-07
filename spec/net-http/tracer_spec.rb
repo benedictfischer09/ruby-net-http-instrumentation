@@ -85,10 +85,10 @@ RSpec.describe Net::Http::Instrumentation do
       end
 
       it "provides a operation name based on request info" do
-        stub_request(:any, "www.example.com/api/v1/article/97863119-0fb4-4303-a0ca-0337406e8645").
+        stub_request(:any, "www.example.com/api/v1/article/97863119-0fb4-4303-a0ca-0337406e8645?callback=0").
           to_return(body: "abc", status: 400,
                     headers: { 'Content-Length' => 3 })
-        uri = URI("http://www.example.com/api/v1/article/97863119-0fb4-4303-a0ca-0337406e8645")
+        uri = URI("http://www.example.com/api/v1/article/97863119-0fb4-4303-a0ca-0337406e8645?callback=0")
 
         allow(OpenTracing.global_tracer).to receive(:start_active_span).with("HTTP PUT /api/v1/article/<uuid>", anything)
 
