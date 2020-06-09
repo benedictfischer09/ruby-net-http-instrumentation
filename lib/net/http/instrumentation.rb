@@ -4,7 +4,7 @@ require "net/http/instrumentation/version"
 module Net
   module Http
     module Instrumentation
-      UUID_REGEX = /[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}/
+      UUID_REGEX = /[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}/.freeze
 
       class << self
         attr_accessor :ignore_request, :tracer, :status_codes
@@ -53,7 +53,7 @@ module Net
                   "peer.port" => @port
                 }
 
-                operation_name = "HTTP #{req.method.to_s.upcase} #{req.path.to_s.gsub(UUID_REGEX,'<uuid>').split("?").first}"
+                operation_name = "HTTP #{req.method.to_s.upcase} #{req.path.to_s.gsub(UUID_REGEX, "<uuid>").split("?").first}"
                 ::Net::Http::Instrumentation.tracer.start_active_span(operation_name, tags: tags) do |scope|
                   # inject the trace so it's available to the remote service
                   OpenTracing.inject(scope.span.context, OpenTracing::FORMAT_RACK, req)
@@ -65,14 +65,14 @@ module Net
                     # set response code and error if applicable
                     scope.span.set_tag("http.status_code", res.code)
                     scope.span.set_tag("error", true) if ::Net::Http::Instrumentation.status_codes.any? { |e| res.is_a? e } || (res.code.to_i >= 500 && res.code.to_i < 600)
-                  rescue StandardError => err
+                  rescue StandardError => e
                     scope.span.set_tag("error", true)
                     scope.span.log_kv(
                       event: "error",
-                      'error.kind': err.class.to_s,
-                      'error.object': err,
-                      message: err.respond_to?(:message) ? err.message : err.to_s,
-                      stack: err.respond_to?(:backtrace) ? err.backtrace.join("\n") : err.to_s
+                      'error.kind': e.class.to_s,
+                      'error.object': e,
+                      message: e.respond_to?(:message) ? e.message : e.to_s,
+                      stack: e.respond_to?(:backtrace) ? e.backtrace.join("\n") : e.to_s
                     )
                     raise
                   end

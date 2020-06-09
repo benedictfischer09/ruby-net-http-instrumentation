@@ -11,7 +11,7 @@ RSpec.describe Net::Http::Instrumentation do
 
   describe "tracing requests" do
     describe "without config" do
-      before(:context) do
+      before(:all) do
         OpenTracing.global_tracer = OpenTracingTestTracer.build
 
         described_class.instrument
@@ -87,7 +87,7 @@ RSpec.describe Net::Http::Instrumentation do
       it "provides a operation name based on request info" do
         stub_request(:any, "www.example.com/api/v1/article/97863119-0fb4-4303-a0ca-0337406e8645?callback=0").
           to_return(body: "abc", status: 400,
-                    headers: { 'Content-Length' => 3 })
+                    headers: { "Content-Length" => 3 })
         uri = URI("http://www.example.com/api/v1/article/97863119-0fb4-4303-a0ca-0337406e8645?callback=0")
 
         allow(OpenTracing.global_tracer).to receive(:start_active_span).with("HTTP PUT /api/v1/article/<uuid>", anything)
@@ -95,9 +95,8 @@ RSpec.describe Net::Http::Instrumentation do
         Net::HTTP.start(uri.host, uri.port) do |http|
           request = Net::HTTP::Put.new uri
 
-          response = http.request request
+          http.request request
         end
-
 
         expect(OpenTracing.global_tracer).to have_received(:start_active_span).with("HTTP PUT /api/v1/article/<uuid>", anything)
       end
