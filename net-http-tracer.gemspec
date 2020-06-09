@@ -7,12 +7,20 @@ require "net/http/instrumentation/version"
 Gem::Specification.new do |spec|
   spec.name          = "nethttp-instrumentation"
   spec.version       = Net::Http::Instrumentation::VERSION
-  spec.authors       = ["Ashwin Chandrasekar"]
-  spec.email         = ["achandrasekar@signalfx.com"]
+  spec.authors       = ["Ben Fischer"]
+  spec.email         = ["bfischer@doximity.com"]
 
-  spec.summary       = "OpenTracing Instrumentation for Net::HTTP requests."
-  spec.homepage      = "http://github.com/signalfx/ruby-net-http-instrumentation"
+  spec.summary       = "Doximity OpenTracing Instrumentation for Net::HTTP requests."
+  spec.homepage      = "https://github.com/doximity/ruby-net-http-instrumentation"
   spec.license       = "Apache-2.0"
+
+  # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
+  # to allow pushing to a single host or delete this section to allow pushing to any host.
+  if spec.respond_to?(:metadata)
+    spec.metadata["homepage_uri"] = spec.homepage
+    spec.metadata["source_code_uri"] = "https://github.com/doximity/ruby-net-http-instrumentation"
+    spec.metadata["changelog_uri"] = "https://github.com/doximity/ruby-net-http-instrumentation/blob/master/CHANGELOG"
+  end
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
