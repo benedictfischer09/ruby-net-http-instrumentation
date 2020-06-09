@@ -4,6 +4,8 @@ require "net/http/instrumentation/version"
 module Net
   module Http
     module Instrumentation
+      UUID_REGEX = /[a-f0-9]{8}-([a-f0-9]{4}-){3}[a-f0-9]{12}/
+
       class << self
         attr_accessor :ignore_request, :tracer, :status_codes
 
@@ -51,7 +53,8 @@ module Net
                   "peer.port" => @port
                 }
 
-                ::Net::Http::Instrumentation.tracer.start_active_span("net_http.request", tags: tags) do |scope|
+                operation_name = "HTTP #{req.method.to_s.upcase} #{req.path.to_s.gsub(UUID_REGEX,'<uuid>')}"
+                ::Net::Http::Instrumentation.tracer.start_active_span(operation_name, tags: tags) do |scope|
                   # inject the trace so it's available to the remote service
                   OpenTracing.inject(scope.span.context, OpenTracing::FORMAT_RACK, req)
 
