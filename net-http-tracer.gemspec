@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "net/http/instrumentation/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = "nethttp-instrumentation"
+  spec.name          = "nethttp-opentracing"
   spec.version       = Net::Http::Instrumentation::VERSION
   spec.authors       = ["Ben Fischer"]
   spec.email         = ["bfischer@doximity.com"]
