@@ -1,27 +1,25 @@
-require "net/http/instrumentation/version"
-require "thread"
+# frozen_string_literal: true
 
+require "net/http/instrumentation/version"
 module Net
   module Http
     module Instrumentation
-
       class << self
-
         attr_accessor :ignore_request, :tracer, :status_codes
 
         def instrument(tracer: OpenTracing.global_tracer,
                        ignore_request: nil,
-                       status_code_errors: [ ::Net::HTTPServerError ])
+                       status_code_errors: [::Net::HTTPServerError])
           @ignore_request = ignore_request
           @tracer = tracer
           @status_codes = status_code_errors
 
-          patch_request if !@instrumented
+          patch_request unless @instrumented
           @instrumented = true
         end
 
         def remove
-          return if !@instrumented
+          return unless @instrumented
 
           ::Net::HTTP.module_eval do
             remove_method :request
@@ -33,12 +31,11 @@ module Net
         end
 
         def patch_request
-
           ::Net::HTTP.module_eval do
             alias_method :request_original, :request
 
             def request(req, body = nil, &block)
-              res = ''
+              res = ""
 
               if ::Net::Http::Instrumentation.ignore_request.respond_to?(:call) &&
                  ::Net::Http::Instrumentation.ignore_request.call
@@ -51,7 +48,7 @@ module Net
                   "http.method" => req.method,
                   "http.url" => req.path,
                   "peer.host" => @address,
-                  "peer.port" => @port,
+                  "peer.port" => @port
                 }
                 ::Net::Http::Instrumentation.tracer.start_active_span("net_http.request", tags: tags) do |scope|
                   # inject the trace so it's available to the remote service
