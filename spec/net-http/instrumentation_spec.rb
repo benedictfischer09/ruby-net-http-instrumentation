@@ -90,7 +90,7 @@ RSpec.describe Net::Http::Instrumentation do
                     headers: { "Content-Length" => 3 })
         uri = URI("http://www.example.com/api/v1/article/97863119-0fb4-4303-a0ca-0337406e8645?callback=0")
 
-        allow(OpenTracing.global_tracer).to receive(:start_active_span).with("HTTP PUT /api/v1/article/<uuid>", anything)
+        allow(OpenTracing.global_tracer).to receive(:start_active_span).with("HTTP PUT www.example.com/api/v1/article/<uuid>", anything)
 
         Net::HTTP.start(uri.host, uri.port) do |http|
           request = Net::HTTP::Put.new uri
@@ -98,7 +98,7 @@ RSpec.describe Net::Http::Instrumentation do
           http.request request
         end
 
-        expect(OpenTracing.global_tracer).to have_received(:start_active_span).with("HTTP PUT /api/v1/article/<uuid>", anything)
+        expect(OpenTracing.global_tracer).to have_received(:start_active_span).with("HTTP PUT www.example.com/api/v1/article/<uuid>", anything)
       end
     end
 
