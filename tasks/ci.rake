@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 namespace :ci do
   desc "Run specs"

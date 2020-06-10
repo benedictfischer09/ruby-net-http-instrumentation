@@ -40,7 +40,7 @@ module Net
               res = ""
 
               if ::Net::Http::Instrumentation.ignore_request.respond_to?(:call) &&
-                ::Net::Http::Instrumentation.ignore_request.call(@address, req)
+                 ::Net::Http::Instrumentation.ignore_request.call(@address, req)
 
                 res = request_original(req, body, &block)
               else
