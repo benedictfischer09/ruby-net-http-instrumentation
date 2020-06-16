@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-source "https://rubygems.org"
-
-git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
+# BEFORE changing this file, read https://wiki.doximity.com/articles/gemfile-maintenance
+source "https://artifacts.dox.support/repository/gems"
 
 # Specify your gem's dependencies in net-http-tracer.gemspec
 gemspec

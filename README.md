@@ -11,7 +11,7 @@ This gem automatically traces all requests made with Net::HTTP.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'nethttp-instrumentation'
+gem 'nethttp-opentracing'
 ```
 
 And then execute:
@@ -20,7 +20,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install nethttp-instrumentation
+    $ gem install nethttp-opentracing
 
 ## Usage
 
@@ -48,7 +48,7 @@ Thread.current[:http_sender_thread] = true
 ...
 
 # configure the instrumentation
-Net::Http::Instrumentation.instrument(ignore_request: -> { Thread.current[:http_sender_thread] })
+Net::Http::Instrumentation.instrument(ignore_request: -> (host, req) { Thread.current[:http_sender_thread] })
 ```
 
 To remove instrumentation:
