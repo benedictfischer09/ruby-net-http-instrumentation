@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    nethttp-opentracing (0.1.4)
+    nethttp-opentracing (0.1.5)
       opentracing (~> 0.3)
 
 GEM
