@@ -53,7 +53,7 @@ module Net
                   "peer.port" => @port
                 }
 
-                operation_name = "HTTP #{req.method.to_s.upcase} #{@address}#{req.path.to_s.gsub(UUID_REGEX, "<uuid>").split("?").first}"
+                operation_name = "HTTP #{req.method.to_s.upcase} #{@address}"
                 ::Net::Http::Instrumentation.tracer.start_active_span(operation_name, tags: tags) do |scope|
                   # inject the trace so it's available to the remote service
                   OpenTracing.inject(scope.span.context, OpenTracing::FORMAT_RACK, req)
